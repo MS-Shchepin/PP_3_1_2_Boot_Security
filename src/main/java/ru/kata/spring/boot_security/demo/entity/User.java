@@ -15,15 +15,8 @@ public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-
-    @Size(min = 3, max = 20, message = "Name size should be in [3..20] symbols")
     private String name;
-
-    @Size(min = 3, max = 20, message = "Lastname size should be in [3..20] symbols")
     private String lastname;
-
-    @Min(value = 18, message = "Age can not be less than 18")
-    @Max(value = 140, message = "Age can not be more than 140")
     private int age;
     @JoinColumn(name = "car_id")
     @OneToOne(cascade = CascadeType.ALL)
