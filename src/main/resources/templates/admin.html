@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+    <head>
+        <meta charset="UTF-8">
+        <title>Admin page</title>
+    </head>
+    <body>
+        <div th:replace="header :: content"></div>
+        <div data-th-align="center">
+            <h2>Registered users:</h2>
+            <table>
+                <tr>
+                    <th><h3>Name</h3></th>
+                    <th><h3>Last name </h3></th>
+                    <th><h3>Age</h3></th>
+                    <th colspan="2"><h3>Car</h3></th>
+                    <th><h3>Username</h3></th>
+                    <th><h3>Password</h3></th>
+                </tr>
+                <th:block th:each="user : ${allUsers}">
+                    <td th:text="${user.name}"></td>
+                    <td th:text="${user.lastname}"></td>
+                    <td th:text="${user.age}"></td>
+                    <td th:text="${user.car.color}"></td>
+                    <td th:text="${user.car.model}"></td>
+                    <td th:text="${user.username}"></td>
+                    <td th:text="${user.password}"></td>
+                    <td>
+                        <form th:action="@{/admin/}" method="get">
+                            <button type="submit" th:name="id" th:value="${user.id}">EDIT</button>
+                        </form>
+                    </td>
+                    <td>
+                        <form th:action="@{admin/deleteUser}" method="get">
+                            <button type="submit" th:name="id" th:value="${user.id}">DELETE</button>
+                        </form>
+                    </td>
+                    </tr>
+                </th:block>
+            </table>
+            <br><br>
+            <form th:action="@{/admin/}" method="get">
+                <button type="submit" th:name="id" th:value="${0}">ADD USER</button>
+            </form>
+        </div>
+    </body>
+</html>
+
+<!--@{../deleteUser} -> http://localhost:8080/deleteUser?id=8-->
+<!--@{admin/deleteUser} -> http://localhost:8080/admin/admin-->
