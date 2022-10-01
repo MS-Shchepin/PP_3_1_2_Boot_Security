@@ -1,6 +1,7 @@
 package ru.kata.spring.boot_security.demo.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -18,8 +19,26 @@ public class MainController {
         this.userService = userService;
     }
 
+    @GetMapping("/login")
+    public String showAdminPage(Model model, Authentication auth) {
+        String roles = auth.getAuthorities()
+                .stream()
+                .map(x -> x.getAuthority())
+                .reduce("", (x, y) -> x + " " + y);
+        System.out.println(roles);
+        model.addAttribute("rolesModel", roles);
+        model.addAttribute("allUsers", userService.getAllUsers());
+        return "admin";
+    }
+
     @GetMapping("/admin")
-    public String showAdminPage(Model model) {
+    public String showAdminPage(Model model, Authentication auth) {
+        String roles = auth.getAuthorities()
+                .stream()
+                .map(x -> x.getAuthority())
+                .reduce("", (x, y) -> x + " " + y);
+        System.out.println(roles);
+        model.addAttribute("rolesModel", roles);
         model.addAttribute("allUsers", userService.getAllUsers());
         return "admin";
     }

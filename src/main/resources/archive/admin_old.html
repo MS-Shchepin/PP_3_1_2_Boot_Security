@@ -1,4 +1,3 @@
-<!doctype html>
 <html lang="en" xmlns:th="https://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
   <head>
     <!-- Required meta tags -->
@@ -8,24 +7,45 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <link th:href="@{/style.css}" rel="stylesheet"/>
-    <link href="../static/style.css" rel="stylesheet"/>
+    <link href="../templates/style.css" rel="stylesheet"/>
     <title>Admin page</title>
   </head>
   <body>
     <!--main-page-container-->
     <div class="main-container container-fluid">
-      <!--HEADER (navbar)-->
-      <div th:replace="header :: header-navbar"></div>
-      <!--UNDER HEADER-->
+      <!--TOP NAVBAR-->
+      <div class="row">
+        <nav class="navbar col-12 navbar-dark top bg-dark flex-nowrap">
+          <div class="admin-status d-flex flex-row px-3">
+            <div class="bg-dark text-white px-1 py-2">
+              <b><span sec:authentication="name">admin@mail.ru</span></b>
+            </div>
+            <div class="bg-dark text-white px-1 py-2">
+              <span>with roles:</span>
+            </div>
+            <div class="bg-dark text-white px-1 py-2" th:each="role : ${#authentication.authorities}">
+              <span th:text="${role}">ADMIN USER</span>
+            </div>
+          </div>
+          <div class="d-flex flex-row-reverse">
+            <ul class="navbar-nav px-3">
+              <li class="nav-item text-nowrap">
+                <a class="nav-link" href="/logout">Logout</a>
+              </li>
+            </ul>
+          </div>
+        </nav>
+      </div>
+      <!--UNDER NAVBAR-->
       <div class="row pr-3">
         <!--SIDEBAR-->
         <div class="sidebar col-2">
           <ul class="nav sidebar col-12 nav-pills pt-0">
             <li class="nav-item nav-fill">
-              <a class="nav-link active" href="/admin">Admin</a>
+              <a class="nav-link active" href="#admin-panel">Admin</a>
             </li>
             <li class="nav-item nav-fill">
-              <a class="nav-link" href="/user">User</a>
+              <a class="nav-link" href="#user-about">User</a>
             </li>
           </ul>
         </div>
@@ -134,120 +154,63 @@
             </div>
           </div>
         </div>
-      </div>
-    </div>
-    <!--    EDIT USER MODAL WINDOW-->
-    <div class="modal fade" id="editUserModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="editModalLabel">Edit user</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="modal-body">
-            <div class="container-fluid">
-              <div class="row text-center justify-content-center pb-1">
-                <div class="col-6">
-                  <form class="x-0">
-                    <div class="form-group">
-                      <label class="mb-0" for="iDInputModalEdit"><b>ID</b></label>
-                      <input type="text" class="form-control form-control-sm" id="iDInputModalEdit" readonly>
-                    </div>
-                    <div class="form-group">
-                      <label class="mb-0" for="firstNameInputModalEdit"><b>First name</b></label>
-                      <input type="text" class="form-control form-control-sm" id="firstNameInputModalEdit">
-                    </div>
-                    <div class="form-group">
-                      <label class="mb-0" for="lastNameInputModalEdit"><b>First name</b></label>
-                      <input type="text" class="form-control form-control-sm" id="lastNameInputModalEdit">
-                    </div>
-                    <div class="form-group">
-                      <label class="mb-0" for="ageInputModalEdit"><b>Age</b></label>
-                      <input type="number" class="form-control form-control-sm" id="ageInputModalEdit">
-                    </div>
-                    <div class="form-group">
-                      <label class="mb-0" for="emailInputModalEdit"><b>Email</b></label>
-                      <input type="email" class="form-control form-control-sm" id="emailInputModalEdit">
-                    </div>
-                    <div class="form-group">
-                      <label class="mb-0" for="passwordInputModalEdit"><b>Password</b></label>
-                      <input type="password" class="form-control form-control-sm" id="passwordInputModalEdit">
-                    </div>
-                    <div class="form-group">
-                      <label class="mb-0" for="roleSelectModalEdit"><b>Role</b></label>
-                      <select class="custom-select" size="2" id="roleSelectModalEdit">
-                        <option value="ADMIN">ADMIN</option>
-                        <option value="USER" selected>USER</option>
-                      </select>
-                    </div>
-                  </form>
+
+
+        <!--USER-PAGE-->
+        <div class="col tab-content pt-3">
+          <div class="tab-pane fade show active right" id="user-about">
+            <div class="bg-light">
+              <h1>User information-page</h1>
+            </div>
+            <!--            USER TABLE TAB-->
+<!--            <div class="tab-content ">-->
+<!--              <div class="tab-pane fade show active" id="user-table">-->
+                <div class="card bg-white">
+                  <div class="card-header pb-1">
+                    <h5>
+                      <span class="align-middle">About users</span>
+                    </h5>
+                  </div>
+                  <div class="card-body">
+                    <table class="table table-striped">
+                      <thead>
+                      <tr>
+                        <th scope="col">ID</th>
+                        <th scope="col">First Name</th>
+                        <th scope="col">Last Name</th>
+                        <th scope="col">Age</th>
+                        <th scope="col">Email</th>
+                        <th scope="col">Role</th>
+                        <th scope="col">Edit</th>
+                        <th scope="col">Delete</th>
+                      </tr>
+                      </thead>
+                      <tbody>
+                      <tr>
+                        <td>1</td>
+                        <td>Maksim</td>
+                        <td>Shchepin</td>
+                        <td>30</td>
+                        <td>promayhem@mail.ru</td>
+                        <td>ADMIN USER</td>
+                        <td>
+                          <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#editUserModal">Edit</button>
+                        </td>
+                        <td>
+                          <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#deleteUserModal">Delete</button>
+                        </td>
+                      </tr>
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
               </div>
-            </div>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            <button type="submit" class="btn btn-primary">Edit</button>
-          </div>
+<!--              </div>-->
+<!--            </div>-->
         </div>
       </div>
     </div>
-    <!--    DELETE USER MODAL WINDOW-->
-    <div class="modal fade" id="deleteUserModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="deleteModalLabel">Edit user</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="modal-body">
-            <div class="container-fluid">
-              <div class="row text-center justify-content-center pb-1">
-                <div class="col-6">
-                  <form class="x-0">
-                    <div class="form-group">
-                      <label class="mb-0" for="iDInputModalDelete"><b>ID</b></label>
-                      <input type="text" class="form-control form-control-sm" id="iDInputModalDelete" readonly>
-                    </div>
-                    <div class="form-group">
-                      <label class="mb-0" for="firstNameInputModalDelete"><b>First name</b></label>
-                      <input type="text" class="form-control form-control-sm" id="firstNameInputModalDelete" readonly>
-                    </div>
-                    <div class="form-group">
-                      <label class="mb-0" for="lastNameInputModalDelete"><b>First name</b></label>
-                      <input type="text" class="form-control form-control-sm" id="lastNameInputModalDelete" readonly>
-                    </div>
-                    <div class="form-group">
-                      <label class="mb-0" for="ageInputModalDelete"><b>Age</b></label>
-                      <input type="number" class="form-control form-control-sm" id="ageInputModalDelete" readonly>
-                    </div>
-                    <div class="form-group">
-                      <label class="mb-0" for="emailInputModalDelete"><b>Email</b></label>
-                      <input type="email" class="form-control form-control-sm" id="emailInputModalDelete" readonly>
-                    </div>
-                    <div class="form-group">
-                      <label class="mb-0" for="roleSelectModalDelete"><b>Role</b></label>
-                      <select class="custom-select" size="2" id="roleSelectModalDelete" disabled>
-                        <option value="ADMIN">ADMIN</option>
-                        <option value="USER">USER</option>
-                      </select>
-                    </div>
-                  </form>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            <button type="submit" class="btn btn-danger">Delete</button>
-          </div>
-        </div>
-      </div>
-    </div>
+
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
             integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
             crossorigin="anonymous"></script>

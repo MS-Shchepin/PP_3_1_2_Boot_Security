@@ -29,12 +29,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .antMatchers("/index/**").permitAll()
                 .antMatchers("/news/**").hasAuthority(Roles.READ_NEWS.name())
                 .antMatchers("/user/**").hasAnyRole(Roles.ADMIN.name(), Roles.USER.name())
                 .antMatchers("/admin/**").hasRole(Roles.ADMIN.name())
                 .and()
-                .formLogin()
+                .formLogin().loginPage("/login")
                 .successHandler(successUserHandler)
                 .and()
                 .logout().logoutSuccessUrl("/index");

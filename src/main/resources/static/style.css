@@ -1,0 +1,32 @@
+.main-container {
+    display: flex;
+    flex-direction: column;
+    background-color: #f8f9fa;
+}
+
+.navbar {
+    padding: 0.1rem 0;
+}
+
+.admin-status {
+    font-size: 120%;
+}
+
+.sidebar {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    background-color: white;
+    padding-left: 0;
+    padding-right: 0;
+    padding-top: 1rem;
+    margin-right: 1rem;
+}
+
+body {
+    background-color: #f8f9fa;
+}
+
+.all-users-header {
+    background-color: #f2f2f2;
+}
