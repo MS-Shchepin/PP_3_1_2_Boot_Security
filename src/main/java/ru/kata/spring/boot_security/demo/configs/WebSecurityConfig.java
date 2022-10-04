@@ -1,6 +1,7 @@
 package ru.kata.spring.boot_security.demo.configs;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -8,7 +9,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import ru.kata.spring.boot_security.demo.roles.Roles;
 import ru.kata.spring.boot_security.demo.service.UserService;
 
 @EnableWebSecurity
@@ -28,15 +28,16 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests()
-                .antMatchers("/news/**").hasAuthority(Roles.READ_NEWS.name())
-                .antMatchers("/user/**").hasAnyRole(Roles.ADMIN.name(), Roles.USER.name())
-                .antMatchers("/admin/**").hasRole(Roles.ADMIN.name())
+        http.csrf().disable()
+                .authorizeRequests()
+                .antMatchers("/user/**").hasAnyRole("ADMIN", "SUPER_ADMIN", "USER")
+                .antMatchers("/admin/**").hasAnyRole("ADMIN", "SUPER_ADMIN")
                 .and()
                 .formLogin().loginPage("/login")
                 .successHandler(successUserHandler)
                 .and()
-                .logout().logoutSuccessUrl("/index");
+                .logout()
+                .logoutSuccessUrl("/login");
     }
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -49,6 +50,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         daoAuthenticationProvider.setPasswordEncoder(passwordEncoder);
         daoAuthenticationProvider.setUserDetailsService(userService);
         return daoAuthenticationProvider;
+    }
+
+    @Bean
+    public ApplicationContext context(ApplicationContext context) {
+        return context;
     }
 
 }

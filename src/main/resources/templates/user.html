@@ -9,41 +9,19 @@
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
           crossorigin="anonymous">
     <link th:href="@{/style.css}" rel="stylesheet"/>
-    <link href="style.css" rel="stylesheet"/>
     <title>User page</title>
   </head>
   <body>
     <!--main-page-container-->
     <div class="main-container container-fluid">
-      <!--TOP NAVBAR-->
-      <div class="row">
-        <nav class="navbar col-12 navbar-dark top bg-dark flex-nowrap">
-          <div class="admin-status d-flex flex-row px-3">
-            <div class="bg-dark text-white px-1 py-2">
-              <b><span sec:authentication="name">user@mail.ru</span></b>
-            </div>
-            <div class="bg-dark text-white px-1 py-2">
-              <span>with roles:</span>
-            </div>
-            <div class="bg-dark text-white px-1 py-2" th:each="role : ${#authentication.authorities}">
-              <span th:text="${role}">USER</span>
-            </div>
-          </div>
-          <div class="d-flex flex-row-reverse">
-            <ul class="navbar-nav px-3">
-              <li class="nav-item text-nowrap">
-                <a class="nav-link" href="/logout">Logout</a>
-              </li>
-            </ul>
-          </div>
-        </nav>
-      </div>
+      <!--HEADER (navbar)-->
+      <div th:replace="header :: header-navbar"></div>
       <!--UNDER NAVBAR-->
       <div class="row pr-3">
         <!--SIDEBAR-->
         <div class="sidebar col-2">
           <ul class="nav sidebar col-12 nav-pills pt-0">
-            <li class="nav-item nav-fill">
+            <li class="nav-item nav-fill" sec:authorize="hasRole('ROLE_ADMIN')">
               <a class="nav-link" href="/admin">Admin</a>
             </li>
             <li class="nav-item nav-fill">
@@ -51,33 +29,6 @@
             </li>
           </ul>
         </div>
-
-        <!--    <div th:replace="header :: content"></div>-->
-        <!--        <div data-th-align="center">-->
-        <!--            <h1>User, welcome spring boot security page!</h1>-->
-        <!--            <br>-->
-        <!--            <h2>Your registration data:</h2><br>-->
-        <!--            <table>-->
-        <!--                <tr>-->
-        <!--                    <th><h3>Name</h3></th>-->
-        <!--                    <th><h3>Last name </h3></th>-->
-        <!--                    <th><h3>Age</h3></th>-->
-        <!--                    <th colspan="2"><h3>Car</h3></th>-->
-        <!--                    <th><h3>Username</h3></th>-->
-        <!--                    <th><h3>Password</h3></th>-->
-        <!--                </tr>-->
-        <!--                <th:block th:object="${modelUser}">-->
-        <!--                    <td th:text="*{name}"></td>-->
-        <!--                    <td th:text="*{lastname}"></td>-->
-        <!--                    <td th:text="*{age}"></td>-->
-        <!--                    <td th:text="*{car.color}"></td>-->
-        <!--                    <td th:text="*{car.model}"></td>-->
-        <!--                    <td th:text="*{username}"></td>-->
-        <!--                    <td th:text="*{password}"></td>-->
-        <!--                </th:block>-->
-        <!--            </table>-->
-        <!--        </div>-->
-
 
         <!--USER-PAGE-->
         <div class="col tab-content pt-3">
@@ -105,13 +56,13 @@
                   </tr>
                   </thead>
                   <tbody>
-                  <tr>
-                    <td>1</td>
-                    <td>Maksim</td>
-                    <td>Shchepin</td>
-                    <td>30</td>
-                    <td>promayhem@mail.ru</td>
-                    <td>USER</td>
+                  <tr th:object="${currentUser}">
+                    <td th:text="*{id}">1</td>
+                    <td th:text="*{name}">Maksim</td>
+                    <td th:text="*{lastname}">Shchepin</td>
+                    <td th:text="*{age}">30</td>
+                    <td th:text="*{username}">promayhem@mail.ru</td>
+                    <td th:text="*{getAllRoles()}">USER</td>
                   </tr>
                   </tbody>
                 </table>
@@ -121,5 +72,15 @@
         </div>
       </div>
     </div>
+    <div th:replace="logout_modal :: logout-navbar"></div>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+            integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+            crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+            integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+            crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+            integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+            crossorigin="anonymous"></script>
   </body>
 </html>

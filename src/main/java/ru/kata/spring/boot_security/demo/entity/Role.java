@@ -58,6 +58,6 @@ public class Role implements GrantedAuthority {
 
     @Override
     public String toString() {
-        return name.replaceFirst("ROLE_", "");
+        return name == null ? "name is null" : name.replaceFirst("ROLE_", "");
     }
 }

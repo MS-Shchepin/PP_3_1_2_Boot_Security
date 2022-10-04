@@ -3,8 +3,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
 import javax.validation.constraints.Size;
 import java.util.Collection;
 import java.util.List;
@@ -18,20 +16,14 @@ public class User implements UserDetails {
     private String name;
     private String lastname;
     private int age;
-    @JoinColumn(name = "car_id")
-    @OneToOne(cascade = CascadeType.ALL)
-    private Car car;
 
-    @Size(min = 5, max = 20, message = "Username size should be in [5..20] symbols")
+    @Size(min = 5, max = 20, message = "Email size should be in [5..20] symbols")
     private String username;
 
     @Size(min = 5, max = 100, message = "Password size should be in [5..100] symbols")
     private String password;
 
-    @Transient
-    private String confirmPassword;
-
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.MERGE}, fetch = FetchType.EAGER)
     @JoinTable(name = "users_roles",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
@@ -40,18 +32,23 @@ public class User implements UserDetails {
     public User() {
     }
 
-    public User(String name, String lastname, int age, Car car, String username, String password) {
+    public User(String name, String lastname, int age, String username, String password) {
         this.name = name;
         this.lastname = lastname;
         this.age = age;
-        this.car = car;
         this.username = username;
         this.password = password;
     }
 
-    public User(long id, String name, String lastname, int age, Car car, String username, String password) {
-        this(name, lastname, age, car, username, password);
+    public User(long id, String name, String lastname, int age, String username, String password) {
+        this(name, lastname, age, username, password);
         this.id = id;
+    }
+
+    public String getAllRoles() {
+        return roles.stream()
+                .map(x -> x.getName().replaceFirst("ROLE_", ""))
+                .reduce("", (x, y) -> x + " " + y);
     }
 
     public long getId() {
@@ -82,24 +79,8 @@ public class User implements UserDetails {
         this.age = age;
     }
 
-    public Car getCar() {
-        return car;
-    }
-
-    public void setCar(Car car) {
-        this.car = car;
-    }
-
     public void setId(long id) {
         this.id = id;
-    }
-
-    public String getConfirmPassword() {
-        return confirmPassword;
-    }
-
-    public void setConfirmPassword(String confirmPassword) {
-        this.confirmPassword = confirmPassword;
     }
 
     public void setUsername(String username) {
@@ -160,10 +141,8 @@ public class User implements UserDetails {
         sb.append(", name='").append(name).append('\'');
         sb.append(", lastname='").append(lastname).append('\'');
         sb.append(", age=").append(age);
-        sb.append(", car=").append(car);
         sb.append(", username='").append(username).append('\'');
         sb.append(", password='").append(password).append('\'');
-        sb.append(", confirmPassword='").append(confirmPassword).append('\'');
         sb.append(", roles=").append(roles);
         sb.append('}');
         return sb.toString();
