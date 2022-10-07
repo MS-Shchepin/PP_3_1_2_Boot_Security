@@ -11,7 +11,7 @@ public interface UserService extends UserDetailsService {
     int SAVE_SUCCESS = 0;
     int ERROR_SAVE_USERNAME_TAKEN = 1;
     int save(User user);
-    User getById(long id);
+    User findById(long id);
     List<User> getAllUsers();
     boolean deleteById(long id);
     User getUserByUsername(String username) throws UsernameNotFoundException;

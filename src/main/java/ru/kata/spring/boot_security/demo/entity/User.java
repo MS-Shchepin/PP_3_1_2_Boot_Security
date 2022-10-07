@@ -1,4 +1,5 @@
 package ru.kata.spring.boot_security.demo.entity;
+import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -9,6 +10,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "users")
+@Data
 public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -40,63 +42,10 @@ public class User implements UserDetails {
         this.password = password;
     }
 
-    public User(long id, String name, String lastname, int age, String username, String password) {
-        this(name, lastname, age, username, password);
-        this.id = id;
-    }
-
     public String getAllRoles() {
         return roles.stream()
                 .map(x -> x.getName().replaceFirst("ROLE_", ""))
                 .reduce("", (x, y) -> x + " " + y);
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getLastname() {
-        return lastname;
-    }
-
-    public void setLastname(String lastname) {
-        this.lastname = lastname;
-    }
-
-    public int getAge() {
-        return age;
-    }
-
-    public void setAge(int age) {
-        this.age = age;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public List<Role> getRoles() {
-        return roles;
-    }
-
-    public void setRoles(List<Role> roles) {
-        this.roles = roles;
     }
 
     @Override
@@ -132,19 +81,5 @@ public class User implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
-    }
-
-    @Override
-    public String toString() {
-        final StringBuilder sb = new StringBuilder("User{");
-        sb.append("id=").append(id);
-        sb.append(", name='").append(name).append('\'');
-        sb.append(", lastname='").append(lastname).append('\'');
-        sb.append(", age=").append(age);
-        sb.append(", username='").append(username).append('\'');
-        sb.append(", password='").append(password).append('\'');
-        sb.append(", roles=").append(roles);
-        sb.append('}');
-        return sb.toString();
     }
 }

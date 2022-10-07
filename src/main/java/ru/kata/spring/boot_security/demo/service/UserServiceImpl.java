@@ -17,12 +17,18 @@ import java.util.Optional;
 @Service
 public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
+    private RoleService roleService;
     private PasswordEncoder passwordEncoder;
 
     @Autowired
     @Lazy
     public void setPasswordEncoder(PasswordEncoder passwordEncoder) {
         this.passwordEncoder = passwordEncoder;
+    }
+
+    @Autowired
+    public void setRoleService(RoleService roleService) {
+        this.roleService = roleService;
     }
 
     @Autowired
@@ -38,14 +44,17 @@ public class UserServiceImpl implements UserService {
             return ERROR_SAVE_USERNAME_TAKEN;
         }
         user.setPassword(passwordEncoder.encode(user.getPassword()));
+        if (user.getId() == 0) {
+            user.getRoles().forEach(roleService::save);
+        }
         userRepository.save(user);
         return SAVE_SUCCESS;
     }
 
     @Transactional
     @Override
-    public User getById(long id) {
-        return userRepository.getById(id);
+    public User findById(long id) {
+        return userRepository.findById(id).orElse(null);
     }
 
     @Transactional
