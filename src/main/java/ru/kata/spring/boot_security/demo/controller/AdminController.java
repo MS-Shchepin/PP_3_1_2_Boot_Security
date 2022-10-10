@@ -20,26 +20,31 @@ public class AdminController {
     }
 
     @GetMapping("/admin")
-    public String showAdminPage(Model model) {
-        model.addAttribute("allUsers", userService.getAllUsers());
-        model.addAttribute("roleList", roleService.getAllRoles());
-        model.addAttribute("newUser", new User());
+    public String showJsAdminPage() {
         return "admin";
     }
 
-    @GetMapping("admin/deleteUser")
+    @GetMapping("/oldadmin")
+    public String showTlAdminPage(Model model) {
+        model.addAttribute("allUsers", userService.getAllUsers());
+        model.addAttribute("roleList", roleService.getAllRoles());
+        model.addAttribute("newUser", new User());
+        return "oldadmin";
+    }
+
+    @GetMapping("oldadmin/deleteUser")
     public String performDelete(@RequestParam Long id) {
         if (userService.deleteById(id)) {
             System.out.printf("user id = %d removed%n",id);
         } else {
             System.out.printf("user id = %d does not exist%n",id);
         }
-        return "redirect:http://localhost:8080/admin";
+        return "redirect:http://localhost:8080/oldadmin";
     }
 
-    @PostMapping("admin/saveUser")
+    @PostMapping("oldadmin/saveUser")
     public String saveUser(@ModelAttribute("newUser") User user) {
-        String result = "redirect:http://localhost:8080/admin";
+        String result = "redirect:http://localhost:8080/oldadmin";
         System.out.println(user);
         int errorCode = userService.save(user);
         if (errorCode != 0) {

@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@Transactional
 public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
     private RoleService roleService;
@@ -36,7 +37,6 @@ public class UserServiceImpl implements UserService {
         this.userRepository = userRepository;
     }
 
-    @Transactional
     @Override
     public int save(User user) {
         Optional<User> userFromDb = userRepository.findByUsername(user.getUsername());
@@ -51,19 +51,16 @@ public class UserServiceImpl implements UserService {
         return SAVE_SUCCESS;
     }
 
-    @Transactional
     @Override
     public User findById(long id) {
         return userRepository.findById(id).orElse(null);
     }
 
-    @Transactional
     @Override
     public List<User> getAllUsers() {
         return userRepository.findAll();
     }
 
-    @Transactional
     @Override
     public boolean deleteById(long id) {
         if (userRepository.findById(id).isPresent()) {
@@ -73,13 +70,11 @@ public class UserServiceImpl implements UserService {
         return false;
     }
 
-    @Transactional
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return getUserByUsername(username);
     }
 
-    @Transactional
     public User getUserByUsername(String username) throws UsernameNotFoundException {
         Optional<User> user = userRepository.findByUsername(username);
         return user.orElseThrow(() -> new UsernameNotFoundException("User with %s not found".formatted(username)));

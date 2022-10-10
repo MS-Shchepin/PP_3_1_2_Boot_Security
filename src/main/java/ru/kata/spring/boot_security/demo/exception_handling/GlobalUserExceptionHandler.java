@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 public class GlobalUserExceptionHandler {
 
     @ExceptionHandler
-    public ResponseEntity<JsonErrorMessage> handleException(AddUserException exception) {
-        return new ResponseEntity<>(new JsonErrorMessage(exception.getMessage()), HttpStatus.BAD_REQUEST);
+    public ResponseEntity<JsonMessage> handleException(AddUserException exception) {
+        return new ResponseEntity<>(new JsonMessage(exception.getMessage()), HttpStatus.BAD_REQUEST);
     }
 }
