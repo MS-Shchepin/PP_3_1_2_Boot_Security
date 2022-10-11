@@ -19,7 +19,7 @@ public class RoleServiceImpl implements RoleService {
     @Override
     public boolean save(Role role) {
         if (role == null || role.getName() == null) {
-            System.out.println("Save failed: incorrect data");
+            System.out.println("Save role failed: incorrect data");
             return false;
         }
         if (roleRepository.findByName(role.getName()).isEmpty()) {

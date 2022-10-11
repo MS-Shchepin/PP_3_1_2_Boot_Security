@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 public class GlobalUserExceptionHandler {
 
     @ExceptionHandler
-    public ResponseEntity<JsonMessage> handleException(AddUserException exception) {
+    public ResponseEntity<JsonMessage> handleException(NotFoundUserException exception) {
         return new ResponseEntity<>(new JsonMessage(exception.getMessage()), HttpStatus.BAD_REQUEST);
     }
 }

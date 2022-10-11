@@ -1,15 +1,24 @@
 //----------------------------------------Entry-Point-Page-Script-Autorun-----
 
-(async function runPage() {
-    await showAllUsers();
-    await showAllRoles(document.getElementById("rolesInput"));
+(async function runScriptOnStart() {
+    await refreshPage();
 }());
+
+async function refreshPage() {
+    await showAllUsers();
+    await showPrincipalHeaderInfo();
+    await showAllRoles(document.getElementById("rolesInput"));
+}
 
 //----------------------------------------Service-API-Interactions-------------------
 
 const head = {
     "Content-Type": "application/json",
     "Accept": "application/json",
+}
+
+async function getAuth() {
+    return await fetch("api/principal");
 }
 
 async function getAllUsers() {
@@ -48,7 +57,26 @@ async function deleteUserById(id) {
     });
 }
 
-//---------------------------------------Main-Page-User-Table-Filling-----------
+//---------------------------------------Principal-Authorities-Checking---------
+// const securityLevel = {ANON: 'ANONIMUS', USER: 'USER', ADMIN: 'ADMIN'};
+//
+// (function checkRole() {
+//     return getAuth()
+//         .then(response => response.json())
+//         .then(principal => {
+//             if (!principal.authenticated) {
+//                 return securityLevel.ANON;
+//             } else {
+//                 for (let role of principal.authorities) {
+//                     if (role.name.includes(securityLevel.ADMIN)) {
+//                         return securityLevel.ADMIN;
+//                     }
+//                 }
+//                 return securityLevel.USER;
+//             }
+//         });
+// }());
+//---------------------------------------Main-Page-UserTable + Header-Filling-----------
 
 async function showAllUsers() {
     let usersTbody = document.getElementById("usersTable").lastElementChild;
@@ -67,6 +95,15 @@ function addAllUserRecords(usersTbody, users) {
         let userRow = mapUserToTableRow(user);
         usersTbody.append(userRow);
     }
+}
+
+function showPrincipalHeaderInfo() {
+    return getAuth()
+        .then(response => response.json())
+        .then(auth => {
+            document.getElementById("authUserUsername").innerText = auth.name;
+            document.getElementById("authUserRoles").innerText = auth.principal.allRoles;
+        });
 }
 
 //-----------------------------------------Role-Options-Filling------------------------
@@ -109,24 +146,6 @@ function addNewUser() {
         })
 }
 
-// async function addNewUser() {
-//     let user = mapToNewUser();
-//     let response = await postNewUser(user);
-//
-//     if (response.ok) {
-//         flushAddUserForm();
-//         await showAllUsers();
-//         (function switchTabToUserTable() {
-//             document.getElementById("userEditor").classList.remove("active", "show");
-//             document.getElementById("editUserButtonTab").classList.remove("active");
-//             document.getElementById("userTable").classList.add("active", "show");
-//             document.getElementById("userTableButtonTab").classList.add("active");
-//         }());
-//     } else {
-//         alert("Error add new user, HTTP status: " + response.status);
-//     }
-// }
-
 //----------------------------------------Edit-User-Filling----------------------
 
 function fillModalUserEditor(id) {
@@ -159,10 +178,11 @@ function fillModalUserEditor(id) {
 function performEditUser() {
     return () => putUserChanges(mapToEditUser())
         .then(() => {
-                showAllUsers().catch(error => alert(error.message));
-                flushEditUserForm();
+            showAllUsers().catch(error => alert(error.message));
+            flushEditUserForm();
         }, error => alert(error.message));
 }
+
 //----------------------------------------Delete-User-Filling--------------------
 
 function fillModalUserRemover(id) {
@@ -186,7 +206,7 @@ function fillModalUserRemover(id) {
 function performDeleteUserById(id) {
     return () => deleteUserById(id)
         .then(() => showAllUsers().catch(error => alert(error.message)),
-                error => alert(error.message));
+            error => alert(error.message));
 }
 
 //----------------------------------------Utility-Functions---------------------

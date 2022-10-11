@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" xmlns:th="https://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html lang="en">
   <head>
     <!-- Required meta tags -->
     <meta charset="utf-8">
@@ -8,24 +8,45 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
           crossorigin="anonymous">
-    <link th:href="@{/style.css}" rel="stylesheet"/>
+    <link href="/style.css" rel="stylesheet"/>
     <title>User page</title>
   </head>
   <body>
     <!--main-page-container-->
     <div class="main-container container-fluid">
       <!--HEADER (navbar)-->
-      <div th:replace="header :: header-navbar"></div>
+      <div class="row">
+        <nav class="navbar col-12 navbar-dark top bg-dark flex-nowrap">
+          <div class="admin-status d-flex flex-row px-3">
+            <div class="bg-dark text-white px-1 py-2">
+              <b><span id="authUserUsername"></span></b>
+            </div>
+            <div class="bg-dark text-white px-1 py-2">
+              <span>with roles:</span>
+            </div>
+            <div class="bg-dark text-white px-1 py-2">
+              <span id="authUserRoles"></span>
+            </div>
+          </div>
+          <div class="d-flex flex-row-reverse">
+            <ul class="navbar-nav px-3">
+              <li class="nav-item text-nowrap">
+                <a class="nav-link" href="/logout">Logout</a>
+              </li>
+            </ul>
+          </div>
+        </nav>
+      </div>
       <!--UNDER NAVBAR-->
       <div class="row pr-3">
         <!--SIDEBAR-->
         <div class="sidebar col-2">
           <ul class="nav sidebar col-12 nav-pills pt-0">
-            <li class="nav-item nav-fill" sec:authorize="hasRole('ROLE_ADMIN')">
+            <li class="nav-item nav-fill" id="sidebarAdminButton">
               <a class="nav-link" href="/admin">Admin</a>
             </li>
             <li class="nav-item nav-fill">
-              <a class="nav-link active" href="/user">User</a>
+              <a class="nav-link active" onclick="refreshPage()">User</a>
             </li>
           </ul>
         </div>
@@ -40,11 +61,11 @@
             <div class="card bg-white">
               <div class="card-header pb-1">
                 <h5>
-                  <span class="align-middle">About users</span>
+                  <span class="align-middle">About user</span>
                 </h5>
               </div>
               <div class="card-body">
-                <table class="table table-striped">
+                <table class="table table-striped" id="userAboutTable">
                   <thead>
                   <tr>
                     <th scope="col">ID</th>
@@ -56,13 +77,13 @@
                   </tr>
                   </thead>
                   <tbody>
-                  <tr th:object="${currentUser}">
-                    <td th:text="*{id}">1</td>
-                    <td th:text="*{name}">Maksim</td>
-                    <td th:text="*{lastname}">Shchepin</td>
-                    <td th:text="*{age}">30</td>
-                    <td th:text="*{username}">promayhem@mail.ru</td>
-                    <td th:text="*{getAllRoles()}">USER</td>
+                  <tr>
+                    <td id="userId"></td>
+                    <td id="userName"></td>
+                    <td id="userLastName"></td>
+                    <td id="userAge"></td>
+                    <td id="userUsername"></td>
+                    <td id="userRoles"></td>
                   </tr>
                   </tbody>
                 </table>
@@ -72,7 +93,7 @@
         </div>
       </div>
     </div>
-    <div th:replace="logout_modal :: logout-navbar"></div>
+    <script src="/userScript.js"></script>
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
             integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
             crossorigin="anonymous"></script>
